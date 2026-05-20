@@ -1160,10 +1160,16 @@ def place_bet_direct(user_id, match_id, team, amount, chat_id):
 
 # ========== ЗАПУСК ДЛЯ RENDER ==========
 if __name__ == '__main__':
-    print("🏒 EXTRABET запущен на Render!")
-    print("👑 Админ-панель активирована")
-    print("📸 Система фото уведомлений готова")
-    print("🎫 Система промокодов работает")
+    print("STARTING...")
     init_db()
-    print("Бот начинает polling...")
-    bot.infinity_polling(timeout=30, long_polling_timeout=60)
+    
+    # Flask в потоке
+    import threading
+    threading.Thread(target=lambda: app.run(host='0.0.0.0', port=PORT), daemon=True).start()
+    print(f"Web server on port {PORT}")
+    
+    # Запуск бота
+    print("Bot starting...")
+    bot.remove_webhook()
+    time.sleep(0.5)
+    bot.infinity_polling()
